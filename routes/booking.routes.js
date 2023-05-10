@@ -8,4 +8,8 @@ export const bookingRoutes = (app) => {
   app
     .route('/booking/details/time')
     .post(VehicleBookingController.receiveBookingDates);
+
+  app
+    .route('/booking')
+    .post(VehicleBookingController.createVehicleBooking);
 };

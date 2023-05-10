@@ -58,4 +58,35 @@ export class VehicleModel {
 
     return result;
   }
+
+  /**
+   * @description
+   * this method fetches a vehicle by its id
+   * @param {number} vehicleId the id of the vehicle to be fetched
+   * @returns the database fetch result
+   */
+  static async getVehicleDetailsById(vehicleId) {
+    const query = 'SELECT * FROM vehicles WHERE id = ?';
+    const params = [vehicleId];
+
+    const result = await Database.executeQuery(query, params);
+
+    return result;
+  }
+
+  /**
+   * @description
+   * this method updates a vehicle's booking status on successful creation of a booking
+   * @param {number} vehicleId the id of the vehicle for which booking status is to be updated
+   * @param {boolean} status the booking status
+   * @returns the database update result
+   */
+  static async updateVehicleBookingStatus(vehicleId, status = true) {
+    const query = 'UPDATE vehicles SET isBooked = ? WHERE id = ?';
+    const params = [status, vehicleId];
+
+    const result = await Database.executeQuery(query, params);
+
+    return result;
+  }
 }

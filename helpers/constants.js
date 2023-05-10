@@ -36,6 +36,17 @@ export const REQUIRED_DATE_FIELDS_FOR_VEHICLE_BOOKING = {
 };
 
 /**
+ * necessary fields to create a vehicle booking
+ */
+export const REQUIRED_VEHICLE_BOOKING_FIELDS = {
+  USER_FIRST_NAME: 'userFirstName',
+  USER_LAST_NAME: 'userLastName',
+  BOOKING_START_DATE: 'bookingStartDate',
+  BOOKING_END_DATE: 'bookingEndDate',
+  VEHICLE_ID: 'vehicleId'
+};
+
+/**
  * key to be used while creating a cookie with user information for vehicle booking
  */
 export const COOKIE_KEY_FOR_BOOKING_INFO = 'vehicleBookingInfo';

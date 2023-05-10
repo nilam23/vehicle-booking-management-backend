@@ -3,7 +3,8 @@ import {
   EXPIRY_OF_BOOKING_INFO_COOKIE,
   HTTP_STATUS_CODES,
   REQUIRED_DATE_FIELDS_FOR_VEHICLE_BOOKING,
-  REQUIRED_USER_FIELDS_FOR_VEHICLE_BOOKING
+  REQUIRED_USER_FIELDS_FOR_VEHICLE_BOOKING,
+  REQUIRED_VEHICLE_BOOKING_FIELDS
 } from '../helpers/constants.js';
 import { AppError } from '../helpers/error.js';
 import {
@@ -12,6 +13,8 @@ import {
   saveCookie,
   sendResponse
 } from '../helpers/utils.js';
+import { VehicleBookingModel } from '../models/booking.model.js';
+import { VehicleModel } from '../models/vehicle.model.js';
 
 export class VehicleBookingController {
   /**
@@ -60,5 +63,36 @@ export class VehicleBookingController {
     saveCookie(res, COOKIE_KEY_FOR_BOOKING_INFO, cookieDetails, EXPIRY_OF_BOOKING_INFO_COOKIE);
 
     return sendResponse(res, HTTP_STATUS_CODES.OK, 'Booking dates received', req.body);
+  }
+
+  /**
+   * @description
+   * this controller method recieves vehicle booking details and then creates a booking for the vehicle
+   * @param {object} req the request object
+   * @param {object} res the response object
+   * @param {object} next the next middleware function in the application’s request-response cycle
+   */
+  static async createVehicleBooking(req, res, next) {
+    if (_isEmptyObject(req.body)) return next(new AppError('Please provide all necessary details to create the vehicle booking', HTTP_STATUS_CODES.BAD_REQUEST));
+
+    if (!areAllFieldsAvailable(req.body, Object.values(REQUIRED_VEHICLE_BOOKING_FIELDS))) return next(new AppError('Some fields are missing to create the vehicle booking', HTTP_STATUS_CODES.BAD_REQUEST));
+
+    try {
+      const fetchVehicleDetailsResult = await VehicleModel.getVehicleDetailsById(req.body.vehicleId);
+
+      if (_isEmptyObject(fetchVehicleDetailsResult[0])) return next(new AppError(`No vehicle found corresponding to the id ${req.body.vehicleId}`, HTTP_STATUS_CODES.NOT_FOUND));
+
+      if (fetchVehicleDetailsResult[0].isBooked) return next(new AppError(`Vehicle with id ${req.body.vehicleId} is already booked`, HTTP_STATUS_CODES.BAD_REQUEST));
+
+      const createVehicleBookingResult = await VehicleBookingModel.createVehicleBooking(req.body);
+
+      if (createVehicleBookingResult.affectedRows) {
+        await VehicleModel.updateVehicleBookingStatus(req.body.vehicleId);
+      } else return next(new AppError('Vehicle booking could not be created', HTTP_STATUS_CODES.BAD_REQUEST));
+
+      return sendResponse(res, HTTP_STATUS_CODES.CREATED, 'Vehicle has been booked', req.body);
+    } catch (error) {
+      return next(new AppError(error.message || 'Internal Server Error', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, error.response || error));
+    }
   }
 }
