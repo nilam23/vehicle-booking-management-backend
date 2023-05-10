@@ -7,6 +7,18 @@ import { VehicleController } from '../controllers/vehicle.controller.js';
  */
 export const vehicleRoutes = (app) => {
   app
+    .route('/vehicles/categories/wheels')
+    .get(VehicleController.getVehicleCategoriesByWheels);
+
+  app
     .route('/vehicles/categories')
-    .get(VehicleController.getVehicleCategories);
+    .get(VehicleController.getVehicleCategoriesFromWheels);
+
+  app
+    .route('/vehicles/types')
+    .get(VehicleController.getVehicleTypes);
+
+  app
+    .route('/vehicles/models')
+    .get(VehicleController.getVehicleModels);
 };
