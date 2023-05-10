@@ -31,6 +31,32 @@ export const isAllowed = (targetValue, targetObject) => {
 
 /**
  * @description
+ * this method receives a targetObject of which keys are to be checked
+ * with the corresponding array of required fields
+ * @param {object} targetObject object of which keys are to be checked
+ * @param {array} requiredFieldsArray array of fields to be checked in the targetObject
+ * @returns a boolean confirming the match
+ */
+export const areAllFieldsAvailable = (targetObject, requiredFieldsArray) => {
+  const targetKeysArray = Object.keys(targetObject);
+
+  const match = requiredFieldsArray.every((field) => targetKeysArray.includes(field));
+
+  return match;
+};
+
+/**
+ * @description
+ * this method creates a cookie and attaches it to the response object
+ * @param {object} res the response object
+ * @param {string} key the key of the cookie to be created
+ * @param {any} value the value of the cookie to be created
+ * @param {number} maxAge the expiry of the cookie in seconds
+ */
+export const saveCookie = (res, key, value, maxAge) => res.cookie(key, value, { httpOnly: true, maxAge });
+
+/**
+ * @description
  * this method checks whether an object is an array
  * @param {object} targetObject the object which needs to be checked if its an array
  * @returns a boolean confirming the check

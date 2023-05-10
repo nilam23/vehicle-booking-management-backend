@@ -18,3 +18,29 @@ export const VEHICLE_CATEGORY_TYPES = {
   WHEELS_TYPE: 'wheels',
   CLASS_TYPE: 'class'
 };
+
+/**
+ * necessary user fields for vehicle booking
+ */
+export const REQUIRED_USER_FIELDS_FOR_VEHICLE_BOOKING = {
+  FIRST_NAME: 'firstName',
+  LAST_NAME: 'lastName'
+};
+
+/**
+ * necessary booking date fields for vehicle booking
+ */
+export const REQUIRED_DATE_FIELDS_FOR_VEHICLE_BOOKING = {
+  START_DATE: 'startDate',
+  END_DATE: 'endDate'
+};
+
+/**
+ * key to be used while creating a cookie with user information for vehicle booking
+ */
+export const COOKIE_KEY_FOR_BOOKING_INFO = 'vehicleBookingInfo';
+
+/**
+ * expiry of the cookie (in seconds) created to store user information for vehicle booking
+ */
+export const EXPIRY_OF_BOOKING_INFO_COOKIE = 60000;
